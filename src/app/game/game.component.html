@@ -1,0 +1,32 @@
+<div id="gameContainer">
+  <form>
+    <label for="textureId">Texture:</label>
+    <select required id="textureId">
+      <option label="Creatures" value="Creatures"></option>
+      <option label="Terrain" value="Terrain"></option>
+      <option label="Walls" value="Walls"></option>
+      <option label="Decor" value="Decor"></option>
+      <option label="Swimming" value="Swimming"></option>
+      <option label="Items" value="Items"></option>
+      <option label="Effects" value="Effects"></option>
+    </select>
+
+    <label for="spriteId">Sprite:</label>
+    <input type="number" id="spriteId" name="spriteId" value="0" min=0 autocomplete="off">
+    <br>
+    <label for="color">Outline Color:</label>
+    <input type="color" id="color" name="color" value="#FF0000">
+
+    <label for="color_alpha">Outline Alpha:</label>
+    <input type="number" id="color_alpha" step="0.01" min=0 max=1 value='1'>
+    <br>
+    <label for="swimming">Swimming:</label>
+    <input type="checkbox" id="swimming" checked>
+    <br>
+    <label for="grid">Grid:</label>
+    <input type="checkbox" id="grid" checked>
+    <label for="sprite_scale">Scale:</label>
+    <input type="number" id="sprite_scale" min=0 step="1" value="4">
+  </form>
+  <div class='.map'></div>
+</div>
