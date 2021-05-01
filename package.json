@@ -1,8 +1,12 @@
 {
   "name": "phaser-angular",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "ng serve"
+    "start": "ng serve",
+    "setup": "npm i && npm run prebuild",
+    "prebuild": "npm run prebuild:assets:all",
+    "prebuild:assets:all": "ts-node scripts/prebuild-assets-all"
   },
   "private": true,
   "dependencies": {
@@ -26,6 +30,10 @@
     "@angular/compiler-cli": "~8.2.0",
     "@angular/language-service": "~8.2.0",
     "@types/node": "~8.9.4",
+    "download-github-repo": "^0.1.4",
+    "imagemin": "^8.0.0",
+    "imagemin-webp": "^6.0.0",
+    "symlink-dir": "^5.0.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
     "typescript": "~3.5.3"

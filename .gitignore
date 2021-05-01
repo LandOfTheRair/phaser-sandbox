@@ -44,3 +44,8 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+#linked repo
+/content
+src/assets
+src/environments
