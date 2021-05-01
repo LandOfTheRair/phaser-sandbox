@@ -14,26 +14,26 @@ export default class NewScene extends Phaser.Scene {
     constructor() {
       super({ key: 'new' });
     }
-  
+
     preload() {
       this.load.setBaseURL('');
       const frameSize = { frameHeight: 64, frameWidth: 64 };
-  
-      this.load.spritesheet('Terrain', 'assets/spritesheets/terrain.png', frameSize);
-      this.load.spritesheet('Walls', 'assets/spritesheets/walls.png', frameSize);
-      this.load.spritesheet('Decor', 'assets/spritesheets/decor.png', frameSize);
-      this.load.spritesheet('Swimming', 'assets/spritesheets/swimming.png', frameSize);
-      this.load.spritesheet('Creatures', 'assets/spritesheets/creatures.png', frameSize);
-      this.load.spritesheet('Items', 'assets/spritesheets/items.png', frameSize);
-      this.load.spritesheet('Effects', 'assets/spritesheets/effects.png', frameSize);
+
+      this.load.spritesheet('Terrain', 'assets/spritesheets/terrain.webp', frameSize);
+      this.load.spritesheet('Walls', 'assets/spritesheets/walls.webp', frameSize);
+      this.load.spritesheet('Decor', 'assets/spritesheets/decor.webp', frameSize);
+      this.load.spritesheet('Swimming', 'assets/spritesheets/swimming.webp', frameSize);
+      this.load.spritesheet('Creatures', 'assets/spritesheets/creatures.webp', frameSize);
+      this.load.spritesheet('Items', 'assets/spritesheets/items.webp', frameSize);
+      this.load.spritesheet('Effects', 'assets/spritesheets/effects.webp', frameSize);
     }
-  
+
     create() {
       this.grid = this.add.grid(9 * 32, 9 * 32, 9 * 64, 9 * 64, 64, 64, 0x057605);
       this.sprite = this.add.sprite(this.renderer.width/2, this.renderer.height/2, 'Creatures', 0);
       this.sprite.setPipeline('OutlinePipeline');
     }
-  
+
     update() {
       this.sprite.setScale(this.spriteScale);
       this.sprite.setFrame(this.frame);
@@ -41,7 +41,7 @@ export default class NewScene extends Phaser.Scene {
       OutlinePipeline.setSwimming(this.sprite, this.swimming);
       this.grid.visible = this.showGrid;
     }
-  
+
     setTexture(texture: string) {
       this.sprite.setTexture(texture);
     }
