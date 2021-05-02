@@ -12,7 +12,7 @@ export class GameComponent implements OnInit {
   config: Phaser.Types.Core.GameConfig;
 
   constructor() {
-    
+
     this.config = {
       type: Phaser.WEBGL,
       backgroundColor: '#fff',
@@ -33,6 +33,8 @@ export class GameComponent implements OnInit {
     this.phaserGame = new Phaser.Game(this.config);
     const spriteBox = document.querySelector("#spriteId") as HTMLInputElement;
     const colorBox = document.querySelector("#color") as HTMLInputElement;
+    const mincolorBox = document.querySelector("#mincolor") as HTMLInputElement;
+    const maxcolorBox = document.querySelector("#maxcolor") as HTMLInputElement;
     const colorAlphaBox = document.querySelector("#color_alpha") as HTMLInputElement;
     const textureBox = document.querySelector("#textureId") as HTMLSelectElement;
     const gridBox = document.querySelector("#grid") as HTMLInputElement;
@@ -43,6 +45,10 @@ export class GameComponent implements OnInit {
     spriteBox.addEventListener("keyup",()=>self.load());
     colorBox.addEventListener("change",()=>self.load());
     colorBox.addEventListener("keyup",()=>self.load());
+    mincolorBox.addEventListener("change",()=>self.load());
+    mincolorBox.addEventListener("keyup",()=>self.load());
+    maxcolorBox.addEventListener("change",()=>self.load());
+    maxcolorBox.addEventListener("keyup",()=>self.load());
     colorAlphaBox.addEventListener("change",()=>self.load());
     colorAlphaBox.addEventListener("keyup",()=>self.load());
     textureBox.addEventListener("change",()=>self.load());
@@ -59,6 +65,8 @@ export class GameComponent implements OnInit {
   public load() {
     const spriteBox = document.querySelector("#spriteId") as HTMLInputElement;
     const colorBox = document.querySelector("#color") as HTMLInputElement;
+    const mincolorBox = document.querySelector("#mincolor") as HTMLInputElement;
+    const maxcolorBox = document.querySelector("#maxcolor") as HTMLInputElement;
     const textureBox = document.querySelector("#textureId") as HTMLSelectElement;
     const colorAlphaBox = document.querySelector("#color_alpha") as HTMLInputElement;
     const gridBox = document.querySelector("#grid") as HTMLInputElement;
@@ -67,9 +75,13 @@ export class GameComponent implements OnInit {
     var scene = this.phaserGame.scene.scenes[0] as NewScene;
     if(!scene) return;
     var color = tinycolor(colorBox.value);
+    var mincolor = tinycolor(mincolorBox.value);
+    var maxcolor = tinycolor(maxcolorBox.value);
 
     scene.frame = +spriteBox.value;
     scene.color = [color._r/255,color._g/255,color._b/255,+colorAlphaBox.value];
+    scene.mincolor = [mincolor._r/255,mincolor._g/255,mincolor._b/255];
+    scene.maxcolor = [maxcolor._r/255,maxcolor._g/255,maxcolor._b/255];
     scene.showGrid = gridBox.checked;
     scene.setTexture(textureBox.value);
     scene.spriteScale = +spriteScaleBox.value;

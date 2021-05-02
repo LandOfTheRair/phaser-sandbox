@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "start": "ng serve",
+    "start:fast": "ng serve --source-map=false",
     "setup": "npm i && npm run prebuild",
     "prebuild": "npm run prebuild:assets:all",
     "prebuild:assets:all": "ts-node scripts/prebuild-assets-all"
@@ -18,6 +19,7 @@
     "@angular/platform-browser": "~8.2.0",
     "@angular/platform-browser-dynamic": "~8.2.0",
     "@angular/router": "~8.2.0",
+    "mrpas": "^2.0.0",
     "phaser": "3.54.0",
     "rxjs": "~6.4.0",
     "tinycolor2": "^1.4.2",

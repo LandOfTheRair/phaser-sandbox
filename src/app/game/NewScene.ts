@@ -9,6 +9,8 @@ export default class NewScene extends Phaser.Scene {
     public mode : number = 0;
     public spriteScale : number = 1;
     public color : Array<number> = [];
+    public mincolor : Array<number> = [];
+    public maxcolor : Array<number> = [];
     public showGrid : boolean = false;
     public swimming : boolean = false;
     constructor() {
@@ -38,6 +40,8 @@ export default class NewScene extends Phaser.Scene {
       this.sprite.setScale(this.spriteScale);
       this.sprite.setFrame(this.frame);
       OutlinePipeline.setOutlineColor(this.sprite, this.color);
+      OutlinePipeline.setColorMin(this.sprite, this.mincolor);
+      OutlinePipeline.setColorMax(this.sprite, this.maxcolor);
       OutlinePipeline.setSwimming(this.sprite, this.swimming);
       this.grid.visible = this.showGrid;
     }

@@ -19,9 +19,20 @@ export default class OutlinePipeline extends Phaser.Renderer.WebGL.Pipelines.Sin
       if (!outlineColor || outlineColor.length != 4) {
         outlineColor = [0,0,0,0];
       }
+      let colorMin = sprite.pipelineData['colorMin'];
+      if (!colorMin || colorMin.length != 3) {
+        colorMin = [0,0,0];
+      }
+      let colorMax = sprite.pipelineData['colorMax'];
+      if (!colorMax || colorMax.length != 3) {
+        colorMax = [1,1,1];
+      }
       this.set4fv('uOutlineColor', outlineColor);
       this.set1f('uSwimming', sprite.pipelineData['swimming'] || false);
       this.set1f('uTime', this.game.loop.getDuration());
+      this.set3fv('uColorMin', colorMin);
+      this.set3fv('uColorMax', colorMax);
+      this.set1f('uFillBlack', sprite.pipelineData['fillBlack'] || false);
     }
 
     // each number is a float between 0 to 1
@@ -32,6 +43,18 @@ export default class OutlinePipeline extends Phaser.Renderer.WebGL.Pipelines.Sin
     // Color is an array containing [red, green, blue, alpha], each number is a float between 0 to 1
     public static setOutlineColor(sprite: Phaser.GameObjects.Sprite, color: Array<number>) {
       sprite.setPipelineData('outlineColor', color);
+    }
+
+    public static setColorMin(sprite: Phaser.GameObjects.Sprite, color: Array<number>) {
+      sprite.setPipelineData('colorMin', color);
+    }
+
+    public static setColorMax(sprite: Phaser.GameObjects.Sprite, color: Array<number>) {
+      sprite.setPipelineData('colorMax', color);
+    }
+
+    public static fillBlack(sprite: Phaser.GameObjects.Sprite, enabled: false) {
+      sprite.setPipelineData('fillBlack', enabled);
     }
 
     // Color is an array containing [red, green, blue, alpha], each number is a float between 0 to 1
@@ -48,27 +71,48 @@ uniform vec2 uTexturePixelOffset;
 uniform vec2 uTextureImageSize;
 uniform vec4 uOutlineColor;
 uniform vec2 uTextureSpriteSize;
+uniform vec3 uColorMin;
+uniform vec3 uColorMax;
 uniform bool uSwimming;
 uniform float uTime;
 
+vec4 restrict( vec4 color) {
+  if (color.x > uColorMax.x || color.y > uColorMax.y || color.z > uColorMax.z) {
+    return vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  if (color.x < uColorMin.x || color.y < uColorMin.y || color.z < uColorMin.z) {
+    return vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  return color;
+}
 void outline( out vec4 fragColor)
 {
   vec2 pixelSize = vec2(1.0,1.0)/uTextureImageSize;
   vec2 spritePixelSmooth = (outTexCoord/pixelSize) - uTexturePixelOffset;
   vec2 spritePixel = floor(spritePixelSmooth);
-  vec4 color = texture2D(uMainSampler, outTexCoord);
-  fragColor = color;
+  fragColor = texture2D(uMainSampler, outTexCoord);
+
+  vec4 color = restrict(fragColor);
   bool edgeL = spritePixel.x == 0.0;
   bool edgeR = spritePixel.x == uTextureSpriteSize.x - 1.0;
   bool edgeU = spritePixel.y == 0.0;
   bool edgeD = spritePixel.y == uTextureSpriteSize.y - 1.0;
   if (uOutlineColor.a != 0.0) {
+    //If the current pixel is not visible
     if (color.a == 0.0) {
-      bool colorU = texture2D(uMainSampler, outTexCoord - vec2(0, pixelSize.y)).a == 1.0 && !edgeU;
-      bool colorD = texture2D(uMainSampler, outTexCoord + vec2(0, pixelSize.y)).a == 1.0 && !edgeD;
-      bool colorL = texture2D(uMainSampler, outTexCoord - vec2(pixelSize.x, 0)).a == 1.0 && !edgeL;
-      bool colorR = texture2D(uMainSampler, outTexCoord + vec2(pixelSize.x, 0)).a == 1.0 && !edgeR;
-      if ( colorU || colorD || colorL || colorR)
+      bool colorU = restrict(texture2D(uMainSampler, outTexCoord - vec2(0, pixelSize.y))).a == 1.0 && !edgeU;
+      bool colorD = restrict(texture2D(uMainSampler, outTexCoord + vec2(0, pixelSize.y))).a == 1.0 && !edgeD;
+      bool colorL = restrict(texture2D(uMainSampler, outTexCoord - vec2(pixelSize.x, 0))).a == 1.0 && !edgeL;
+      bool colorR = restrict(texture2D(uMainSampler, outTexCoord + vec2(pixelSize.x, 0))).a == 1.0 && !edgeR;
+
+      bool colorUL = restrict(texture2D(uMainSampler, outTexCoord - vec2(pixelSize.x, pixelSize.y))).a == 1.0 && !edgeU && !edgeL;
+      bool colorUR = restrict(texture2D(uMainSampler, outTexCoord + vec2(pixelSize.x, -pixelSize.y))).a == 1.0 && !edgeU && !edgeR;
+      bool colorDL = restrict(texture2D(uMainSampler, outTexCoord + vec2(-pixelSize.x, pixelSize.y))).a == 1.0 && !edgeD && !edgeL;
+      bool colorDR = restrict(texture2D(uMainSampler, outTexCoord + vec2(pixelSize.x, pixelSize.y))).a == 1.0 && !edgeD && !edgeR;
+      bool ok = (!(colorU && colorD)) && (!(colorL && colorR)) && (!(colorUL && colorDR)) && (!(colorDL && colorUR));
+      float live = float(colorU) + float(colorD) + float(colorL) + float(colorR) +
+                  float(colorUL) + float(colorUR) + float(colorDL) + float(colorDR);
+      if ((live > 2.0) && ok && (colorU || colorD || colorL || colorR))
       {
         fragColor = uOutlineColor;
       }
@@ -76,7 +120,7 @@ void outline( out vec4 fragColor)
       fragColor = uOutlineColor;
     }
   }
-  
+
   if (uSwimming && spritePixelSmooth.y > (cos(uTime*2.5)*2.0)+32.0) {
     fragColor.a = 0.001;
   }
