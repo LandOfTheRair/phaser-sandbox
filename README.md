@@ -1,3 +1,11 @@
 This sandbox helps testing visual effects without needing to constantly restart the game.
 
-All of the spritesheets from the game need to be placed in `src/assets/spritesheets`
+The Sandbox folder needs to be next to already setup Assets, Content, and LandOfTheRair repos.
+
+Expected folder structure:
+
+Rair
+- Assets
+- Content
+- LandOfTheRair
+- phaser-sandbox

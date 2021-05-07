@@ -1,6 +1,6 @@
 
 import Phaser from 'phaser';
-import OutlinePipeline from '../pipelines/OutlinePipeline';
+import OutlinePipeline from '../../../../LandOfTheRair/client/src/app/pipelines/OutlinePipeline';
 
 export default class NewScene extends Phaser.Scene {
     private sprite : Phaser.GameObjects.Sprite;

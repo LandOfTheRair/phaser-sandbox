@@ -21,6 +21,9 @@
       "scripthost"
     ]
   },
+  "exclude": [
+    "./src/linked/**/*.ts"
+  ],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true

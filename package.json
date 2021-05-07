@@ -5,8 +5,7 @@
   "scripts": {
     "start": "ng serve",
     "setup": "npm i && npm run prebuild",
-    "prebuild": "npm run prebuild:assets:all",
-    "prebuild:assets:all": "ts-node scripts/prebuild-assets-all"
+    "link": "ts-node scripts/link-rair"
   },
   "private": true,
   "dependencies": {
