@@ -22,7 +22,8 @@
     ]
   },
   "exclude": [
-    "./src/linked/**/*.ts"
+    "./src/linked/LandOfTheRair/client/**/*.ts",
+    "./src/linked/LandOfTheRair/server/**/*.ts"
   ],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
